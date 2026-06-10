@@ -3,207 +3,1017 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>📘 Exam Tracker – All Dates in One Place</title>
-  <!-- Tailwind CSS + Font Awesome Icons -->
+  <title>📘 Exam Tracker Central – Manage Your Exam Dates</title>
+  
+  <!-- Tailwind CSS + Google Fonts + Font Awesome Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <!-- flatpickr for date picking -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: 'var(--brand-50)',
+              100: 'var(--brand-100)',
+              200: 'var(--brand-200)',
+              300: 'var(--brand-300)',
+              400: 'var(--brand-400)',
+              500: 'var(--brand-500)',
+              600: 'var(--brand-600)',
+              700: 'var(--brand-700)',
+              800: 'var(--brand-800)',
+              900: 'var(--brand-900)',
+              950: 'var(--brand-950)',
+            },
+          },
+        },
+      },
+    }
+  </script>
+  
   <style>
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
-    /* card transition */
-    .exam-card { transition: all 0.2s ease; }
-    .exam-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+    
+    /* Dynamic Theme Variables */
+    :root {
+      /* Indigo Theme - default */
+      --brand-50: #f5f3ff;
+      --brand-100: #ede9fe;
+      --brand-200: #ddd6fe;
+      --brand-300: #c4b5fd;
+      --brand-400: #a78bfa;
+      --brand-500: #6366f1;
+      --brand-600: #4f46e5;
+      --brand-700: #4338ca;
+      --brand-800: #3730a3;
+      --brand-900: #312e81;
+      --brand-950: #1e1b4b;
+    }
+    
+    body.theme-indigo {
+      --brand-50: #f5f3ff;
+      --brand-100: #ede9fe;
+      --brand-200: #ddd6fe;
+      --brand-300: #c4b5fd;
+      --brand-400: #a78bfa;
+      --brand-500: #6366f1;
+      --brand-600: #4f46e5;
+      --brand-700: #4338ca;
+      --brand-800: #3730a3;
+      --brand-900: #312e81;
+      --brand-950: #1e1b4b;
+    }
+    
+    body.theme-emerald {
+      --brand-50: #ecfdf5;
+      --brand-100: #d1fae5;
+      --brand-200: #a7f3d0;
+      --brand-300: #6ee7b7;
+      --brand-400: #34d399;
+      --brand-500: #10b981;
+      --brand-600: #059669;
+      --brand-700: #047857;
+      --brand-800: #065f46;
+      --brand-900: #064e3b;
+      --brand-950: #022c22;
+    }
+    
+    body.theme-rose {
+      --brand-50: #fff1f2;
+      --brand-100: #ffe4e6;
+      --brand-200: #fecdd3;
+      --brand-300: #fda4af;
+      --brand-400: #fb7185;
+      --brand-500: #f43f5e;
+      --brand-600: #e11d48;
+      --brand-700: #be123c;
+      --brand-800: #9f1239;
+      --brand-900: #881337;
+      --brand-950: #4c0519;
+    }
+    
+    body.theme-amber {
+      --brand-50: #fffbeb;
+      --brand-100: #fef3c7;
+      --brand-200: #fde68a;
+      --brand-300: #fcd34d;
+      --brand-400: #fbbf24;
+      --brand-500: #f59e0b;
+      --brand-600: #d97706;
+      --brand-700: #b45309;
+      --brand-800: #92400e;
+      --brand-900: #78350f;
+      --brand-950: #451a03;
+    }
+    
+    body.theme-slate {
+      --brand-50: #f8fafc;
+      --brand-100: #f1f5f9;
+      --brand-200: #e2e8f0;
+      --brand-300: #cbd5e1;
+      --brand-400: #94a3b8;
+      --brand-500: #64748b;
+      --brand-600: #475569;
+      --brand-700: #334155;
+      --brand-800: #1e293b;
+      --brand-900: #0f172a;
+      --brand-950: #020617;
+    }
+
+    /* Custom scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #475569;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+
+    /* Card transitions */
+    .exam-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .exam-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+    .dark .exam-card:hover {
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+    }
+
+    /* Modal animation */
+    .modal-enter {
+      animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Flatpickr light/dark theme overrides */
+    .flatpickr-day.selected, .flatpickr-day.selected:hover {
+      background: var(--brand-600) !important;
+      border-color: var(--brand-600) !important;
+    }
+    .dark-flatpickr {
+      background: #0f172a !important;
+      border-color: #1e293b !important;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+    }
+    .dark-flatpickr .flatpickr-months .flatpickr-month {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      fill: #f8fafc !important;
+    }
+    .dark-flatpickr .flatpickr-current-month {
+      color: #f8fafc !important;
+    }
+    .dark-flatpickr .flatpickr-current-month .numInputWrapper span.arrowUp:after {
+      border-bottom-color: #cbd5e1 !important;
+    }
+    .dark-flatpickr .flatpickr-current-month .numInputWrapper span.arrowDown:after {
+      border-top-color: #cbd5e1 !important;
+    }
+    .dark-flatpickr .flatpickr-weekdays {
+      background: #0f172a !important;
+    }
+    .dark-flatpickr span.flatpickr-weekday {
+      background: #0f172a !important;
+      color: #94a3b8 !important;
+    }
+    .dark-flatpickr .flatpickr-day {
+      color: #cbd5e1 !important;
+    }
+    .dark-flatpickr .flatpickr-day:hover, .dark-flatpickr .flatpickr-day:focus {
+      background: #1e293b !important;
+      color: #ffffff !important;
+    }
+    .dark-flatpickr .flatpickr-day.today {
+      border-color: var(--brand-500) !important;
+    }
+    .dark-flatpickr .flatpickr-day.today:hover {
+      background: var(--brand-500) !important;
+      color: #ffffff !important;
+    }
+    .dark-flatpickr .flatpickr-day.selected {
+      background: var(--brand-500) !important;
+      color: #ffffff !important;
+      border-color: var(--brand-500) !important;
+    }
+    .dark-flatpickr .flatpickr-months .flatpickr-prev-month, 
+    .dark-flatpickr .flatpickr-months .flatpickr-next-month {
+      color: #cbd5e1 !important;
+      fill: #cbd5e1 !important;
+    }
+    .dark-flatpickr .flatpickr-months .flatpickr-prev-month:hover, 
+    .dark-flatpickr .flatpickr-months .flatpickr-next-month:hover {
+      color: #ffffff !important;
+    }
+
+    /* Print styling rules */
+    @media print {
+      body > *:not(#printArea) {
+        display: none !important;
+      }
+      #printArea {
+        display: block !important;
+        width: 100% !important;
+        background: white !important;
+        color: black !important;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-top: 15px;
+      }
+      th, td {
+        border: 1px solid #cbd5e1;
+        padding: 8px;
+        text-align: left;
+        font-size: 11px;
+      }
+      th {
+        background-color: #f1f5f9 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
   </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen p-4 md:p-6 font-sans">
+<body class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-4 md:p-6 transition-colors duration-300">
 
-  <div class="max-w-6xl mx-auto">
+  <div class="max-w-6xl mx-auto space-y-6">
     <!-- Header -->
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-extrabold text-gray-800 flex items-center justify-center gap-3">
-        <i class="fas fa-calendar-alt text-indigo-600"></i> 
-        Exam Tracker Central
-      </h1>
-      <p class="text-gray-600 mt-2">Govt / Private | Forms | Admit Card | Exam Dates | Notifications</p>
-      <button id="enableNotificationsBtn" class="mt-2 text-sm bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full transition">
-        <i class="fas fa-bell"></i> Enable Notifications
-      </button>
-    </div>
-
-    <!-- Add / Edit Exam Form -->
-    <div class="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-gray-100">
-      <h2 class="text-2xl font-bold text-gray-700 mb-4 flex items-center gap-2">
-        <i class="fas fa-plus-circle text-green-600"></i> 
-        <span id="formTitle">Add New Exam</span>
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Exam Name *</label>
-          <input type="text" id="examName" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-400" placeholder="e.g., SSC CGL 2025">
-        </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Type</label>
-          <select id="examType" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-            <option value="Government">🏛️ Government</option>
-            <option value="Private">💼 Private</option>
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between p-6 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md rounded-2xl border border-slate-200/50 dark:border-slate-800/50 gap-4">
+      <div class="space-y-1">
+        <h1 class="text-3xl font-extrabold flex items-center gap-3">
+          <i class="fas fa-calendar-alt text-brand-600 dark:text-brand-400"></i>
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-brand-800 dark:from-brand-400 dark:to-brand-500">
+            Exam Tracker Central
+          </span>
+        </h1>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Your single-page, browser-based exam dashboard and planner</p>
+      </div>
+      
+      <!-- Controls Panel -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Color Palette Select -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl px-3 py-1.5 border border-slate-200 dark:border-slate-700 text-xs">
+          <label for="themeSelect" class="text-slate-500 dark:text-slate-400 mr-2 font-medium">Palette:</label>
+          <select id="themeSelect" class="bg-transparent font-semibold focus:outline-none cursor-pointer text-brand-600 dark:text-brand-400">
+            <option value="theme-indigo">Midnight Indigo</option>
+            <option value="theme-emerald">Forest Jade</option>
+            <option value="theme-rose">Crimson Velvet</option>
+            <option value="theme-amber">Sunset Amber</option>
+            <option value="theme-slate">Nordic Slate</option>
           </select>
         </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Form Start Date</label>
-          <input type="text" id="formStart" class="datepicker w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Pick date">
+
+        <!-- Reminder window option -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl px-3 py-1.5 border border-slate-200 dark:border-slate-700 text-xs">
+          <label for="reminderDays" class="text-slate-500 dark:text-slate-400 mr-2 font-medium">Alert Window:</label>
+          <select id="reminderDays" class="bg-transparent font-semibold focus:outline-none cursor-pointer text-brand-600 dark:text-brand-400">
+            <option value="1">1 Day</option>
+            <option value="2" selected>2 Days</option>
+            <option value="5">5 Days</option>
+            <option value="7">7 Days</option>
+          </select>
         </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Form End Date</label>
-          <input type="text" id="formEnd" class="datepicker w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Pick date">
-        </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Exam Date</label>
-          <input type="text" id="examDate" class="datepicker w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Pick date">
-        </div>
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Admit Card Date</label>
-          <input type="text" id="admitDate" class="datepicker w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Pick date">
-        </div>
-        <div class="md:col-span-2">
-          <label class="block text-gray-700 font-medium mb-1">Advertisement URL (link to official notice)</label>
-          <input type="url" id="adUrl" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="https://ssc.nic.in/notice/...">
-        </div>
-        <div class="md:col-span-2">
-          <label class="block text-gray-700 font-medium mb-1">Additional Notes</label>
-          <textarea id="notes" rows="2" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="Eligibility, fee, age limit..."></textarea>
-        </div>
-      </div>
-      <div class="flex gap-3 mt-6">
-        <button id="saveBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-6 rounded-lg shadow transition">
-          <i class="fas fa-save"></i> Save Exam
+
+        <!-- Enable Notification -->
+        <button id="enableNotificationsBtn" class="flex items-center gap-2 text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 px-3 py-2 rounded-xl transition">
+          <i class="fas fa-bell"></i> Enable Notifications
         </button>
-        <button id="cancelEditBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg hidden transition">
-          Cancel Edit
+        
+        <!-- Import / Export / Print / Clear Buttons -->
+        <div class="flex items-center gap-1.5">
+          <button onclick="exportBackup()" title="Backup to JSON file" class="p-2 text-xs font-semibold bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-950/80 rounded-xl transition flex items-center gap-1.5">
+            <i class="fas fa-file-export"></i> <span class="hidden sm:inline">Export</span>
+          </button>
+          
+          <button onclick="triggerImport()" title="Restore from JSON file" class="p-2 text-xs font-semibold bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-950/80 rounded-xl transition flex items-center gap-1.5">
+            <i class="fas fa-file-import"></i> <span class="hidden sm:inline">Import</span>
+          </button>
+          <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="handleImport(event)">
+
+          <button onclick="triggerPrint()" title="Print Summary Table" class="p-2 text-xs font-semibold bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-950/80 rounded-xl transition flex items-center gap-1.5">
+            <i class="fas fa-print"></i> <span class="hidden sm:inline">Print</span>
+          </button>
+
+          <button onclick="clearAllData()" title="Reset Tracker Storage" class="p-2 text-xs font-semibold bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100 dark:hover:bg-rose-950/80 rounded-xl transition flex items-center gap-1.5">
+            <i class="fas fa-trash-alt"></i> <span class="hidden sm:inline">Reset</span>
+          </button>
+        </div>
+
+        <!-- Dark Mode Toggle -->
+        <button onclick="toggleTheme()" class="w-9 h-9 flex items-center justify-center bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition">
+          <i id="themeIcon" class="fas fa-moon"></i>
         </button>
       </div>
-    </div>
+    </header>
 
-    <!-- Filters & Search -->
-    <div class="flex flex-wrap gap-3 mb-6 items-center justify-between">
-      <div class="flex gap-2">
-        <button data-filter="all" class="filter-btn bg-indigo-100 text-indigo-800 px-4 py-1 rounded-full font-medium">All</button>
-        <button data-filter="Government" class="filter-btn bg-gray-100 text-gray-700 px-4 py-1 rounded-full font-medium">Government</button>
-        <button data-filter="Private" class="filter-btn bg-gray-100 text-gray-700 px-4 py-1 rounded-full font-medium">Private</button>
+    <!-- Stats Dashboard -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center text-xl shrink-0">
+          <i class="fas fa-folder"></i>
+        </div>
+        <div>
+          <span class="block text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">Total Tracked</span>
+          <span id="statTotalExams" class="text-2xl font-bold">0</span>
+        </div>
       </div>
-      <div class="relative">
-        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-        <input type="text" id="searchInput" placeholder="Search exam..." class="pl-9 pr-4 py-2 border rounded-full w-64 focus:outline-none focus:ring-2 focus:ring-indigo-300">
+
+      <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center text-xl shrink-0 animate-pulse">
+          <i class="fas fa-hourglass-half"></i>
+        </div>
+        <div>
+          <span class="block text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">Form Closing</span>
+          <span id="statClosingSoon" class="text-2xl font-bold text-rose-600 dark:text-rose-400">0</span>
+        </div>
       </div>
-    </div>
 
-    <!-- Exams List -->
-    <div id="examsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- dynamic cards will appear here -->
-    </div>
+      <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl shrink-0">
+          <i class="fas fa-calendar-day"></i>
+        </div>
+        <div>
+          <span class="block text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">Exams Soon</span>
+          <span id="statExamsSoon" class="text-2xl font-bold text-amber-600 dark:text-amber-400">0</span>
+        </div>
+      </div>
 
-    <!-- Empty state / fallback -->
-    <div id="emptyState" class="text-center py-12 hidden">
-      <i class="fas fa-folder-open text-5xl text-gray-400"></i>
-      <p class="text-gray-500 mt-3">No exams added yet. Click "Add New Exam" above.</p>
+      <div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl shrink-0">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <div>
+          <span class="block text-xs text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-wider">Govt / Private</span>
+          <span id="statGovtPrivate" class="text-2xl font-bold">0 / 0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Input Form Card -->
+      <section class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+          <span id="formTitleIcon" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center text-base">
+            <i class="fas fa-plus-circle"></i>
+          </span>
+          <span id="formTitle">Add New Exam</span>
+        </h2>
+        
+        <form onsubmit="event.preventDefault();" class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Name *</label>
+            <input type="text" id="examName" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none dark:focus:border-brand-500/50" placeholder="e.g., UPSC Prelims 2026" required>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Category</label>
+            <select id="examType" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none dark:focus:border-brand-500/50">
+              <option value="Government">🏛️ Government</option>
+              <option value="Private">💼 Private</option>
+            </select>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Form Start Date</label>
+              <input type="text" id="formStart" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Form End Date</label>
+              <input type="text" id="formEnd" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Date</label>
+              <input type="text" id="examDate" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Admit Card Release</label>
+              <input type="text" id="admitDate" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Official Advertisement URL</label>
+            <input type="url" id="adUrl" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none" placeholder="https://example.com/notice">
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Important Notes</label>
+            <textarea id="notes" rows="3" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none resize-none" placeholder="Eligibility limits, exam patterns, fee rules..."></textarea>
+          </div>
+          
+          <div class="flex gap-2 pt-2">
+            <button id="saveBtn" onclick="saveExam()" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-brand-600/10 hover:shadow-brand-600/20 transition flex items-center justify-center gap-2">
+              <i class="fas fa-save"></i> Save Exam
+            </button>
+            <button id="cancelEditBtn" onclick="clearForm()" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-semibold py-2.5 px-4 rounded-xl hidden transition">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- list View Section -->
+      <section class="lg:col-span-7 space-y-4">
+        
+        <!-- Search, Filter & Sort Controls -->
+        <div class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+          <!-- Filter Tabs -->
+          <div class="flex bg-slate-100 dark:bg-slate-950 p-1 rounded-xl w-full md:w-auto">
+            <button data-filter="all" class="filter-btn flex-1 md:flex-initial text-xs font-semibold px-4 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm transition">All</button>
+            <button data-filter="Government" class="filter-btn flex-1 md:flex-initial text-xs font-semibold px-4 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition">Government</button>
+            <button data-filter="Private" class="filter-btn flex-1 md:flex-initial text-xs font-semibold px-4 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition">Private</button>
+          </div>
+          
+          <!-- Search & Sort -->
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <div class="relative flex-1 md:flex-initial">
+              <i class="fas fa-search absolute left-3.5 top-3 text-slate-400 dark:text-slate-500 text-sm"></i>
+              <input type="text" id="searchInput" placeholder="Search exams..." class="pl-9 pr-4 py-2 text-sm border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:outline-none focus:ring-2 focus:ring-brand-500/20 rounded-xl w-full md:w-48 transition">
+            </div>
+            
+            <div class="relative shrink-0">
+              <select id="sortOption" onchange="handleSortChange(this.value)" class="pl-3 pr-8 py-2 text-sm border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 focus:outline-none focus:ring-2 focus:ring-brand-500/20 rounded-xl cursor-pointer">
+                <option value="examDate">📅 Sort: Exam Date</option>
+                <option value="formEnd">⏳ Sort: Form Deadline</option>
+                <option value="name">🔤 Sort: Name (A-Z)</option>
+                <option value="created">🆕 Sort: Recently Added</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid of Cards -->
+        <div id="examsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Dynamically populated cards -->
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="emptyState" class="bg-white dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-800 rounded-2xl p-12 text-center space-y-3 hidden">
+          <div class="w-16 h-16 bg-slate-100 dark:bg-slate-950 text-slate-400 dark:text-slate-600 rounded-full flex items-center justify-center text-2xl mx-auto">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-700 dark:text-slate-200">No exams matches found</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">Add new exam schedules using the form on the left or try adjusting filters and sorting parameters.</p>
+        </div>
+      </section>
     </div>
   </div>
 
+  <!-- Custom Dialog Modal (Overlay) -->
+  <div id="customModalOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-sm hidden">
+    <div id="customModalContent" class="modal-enter bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 max-w-md w-full mx-4 shadow-2xl overflow-hidden">
+      <div class="p-6 space-y-4">
+        <h3 id="modalTitle" class="text-xl font-bold text-slate-800 dark:text-slate-100">Modal Title</h3>
+        <p id="modalBody" class="text-sm text-slate-500 dark:text-slate-400"></p>
+      </div>
+      <div class="bg-slate-50 dark:bg-slate-950 px-6 py-4 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800/50">
+        <button id="modalCancelBtn" class="px-4 py-2 rounded-xl text-sm font-semibold bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 transition">Cancel</button>
+        <button id="modalConfirmBtn" class="px-4 py-2 rounded-xl text-sm font-semibold bg-brand-600 hover:bg-brand-700 text-white transition">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Hidden Print Area -->
+  <div id="printArea" class="hidden"></div>
+
   <script>
-    // ---------- Data Model ----------
-    let exams = [];          // array of exam objects
-    let editId = null;      // if editing, store the id
+    // ---------- State ----------
+    let exams = [];
+    let editId = null;
+    let currentFilter = 'all';
+    let currentSearch = '';
+    let currentSort = 'examDate';
     
-    // Load from localStorage
-    function loadData() {
-      const stored = localStorage.getItem('examTracker');
-      if(stored) {
-        exams = JSON.parse(stored);
+    // Notification variables
+    let notificationPermission = false;
+    
+    // ---------- Initialize App ----------
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initThemeSelector();
+      initDatepickers();
+      loadData();
+      
+      // Setup window limit listener
+      const reminderSelect = document.getElementById('reminderDays');
+      const savedDays = localStorage.getItem('notificationWindow');
+      if (savedDays) {
+        reminderSelect.value = savedDays;
+      }
+      reminderSelect.addEventListener('change', (e) => {
+        localStorage.setItem('notificationWindow', e.target.value);
+        showToast(`Alert window updated to ${e.target.value} day(s)`, 'success');
+        scheduleNotificationCheck();
+      });
+    });
+
+    // ---------- Theme Integration ----------
+    function initTheme() {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeIcon').className = 'fas fa-sun';
       } else {
-        // sample demo data
-        exams = [
-          {
-            id: Date.now()+1,
-            name: "SSC CGL 2025",
-            type: "Government",
-            formStart: "2025-01-10",
-            formEnd: "2025-02-10",
-            examDate: "2025-05-15",
-            admitDate: "2025-05-01",
-            adUrl: "https://ssc.nic.in",
-            notes: "Age 18-32, Graduation required",
-            createdAt: new Date().toISOString()
-          },
-          {
-            id: Date.now()+2,
-            name: "TCS NQT 2025",
-            type: "Private",
-            formStart: "2025-02-01",
-            formEnd: "2025-03-01",
-            examDate: "2025-03-20",
-            admitDate: "2025-03-10",
-            adUrl: "https://tcs.com/careers",
-            notes: "Online test, no fee",
-            createdAt: new Date().toISOString()
+        document.documentElement.classList.remove('dark');
+        document.getElementById('themeIcon').className = 'fas fa-moon';
+      }
+    }
+    
+    function toggleTheme() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+        document.getElementById('themeIcon').className = 'fas fa-moon';
+        showToast('Light mode enabled', 'info');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+        document.getElementById('themeIcon').className = 'fas fa-sun';
+        showToast('Dark mode enabled', 'info');
+      }
+    }
+
+    function initThemeSelector() {
+      const select = document.getElementById('themeSelect');
+      const storedTheme = localStorage.getItem('colorTheme') || 'theme-indigo';
+      select.value = storedTheme;
+      document.body.className = `${storedTheme} bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-4 md:p-6 transition-colors duration-300`;
+      
+      select.addEventListener('change', (e) => {
+        const selected = e.target.value;
+        localStorage.setItem('colorTheme', selected);
+        document.body.className = `${selected} bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 text-slate-800 dark:text-slate-100 min-h-screen p-4 md:p-6 transition-colors duration-300`;
+        showToast('Color scheme updated!', 'success');
+      });
+    }
+
+    // ---------- Flatpickr Initialization ----------
+    function initDatepickers() {
+      flatpickr(".datepicker", {
+        dateFormat: "Y-m-d",
+        allowInput: true,
+        altInput: true,
+        altFormat: "d M Y",
+        onOpen: function(selectedDates, dateStr, instance) {
+          if (document.documentElement.classList.contains('dark')) {
+            instance.calendarContainer.classList.add('dark-flatpickr');
+          } else {
+            instance.calendarContainer.classList.remove('dark-flatpickr');
           }
-        ];
+        }
+      });
+    }
+
+    // ---------- Checklist Subsystem Operations ----------
+    function getDefaultChecklist() {
+      return [
+        { text: "Fill online application", done: false },
+        { text: "Pay exam registration fees", done: false },
+        { text: "Download official admit card", done: false },
+        { text: "Complete syllabus & practice tests", done: false }
+      ];
+    }
+
+    function migrateExamsChecklist() {
+      let modified = false;
+      exams.forEach(ex => {
+        if (!ex.checklist || !Array.isArray(ex.checklist)) {
+          ex.checklist = getDefaultChecklist();
+          modified = true;
+        }
+      });
+      if (modified) {
         saveToLocal();
       }
+    }
+
+    window.toggleChecklist = function(id) {
+      const chkListDiv = document.getElementById(`chkList-${id}`);
+      chkListDiv.classList.toggle('hidden');
+    };
+
+    window.toggleChecklistItem = function(examId, index) {
+      const exam = exams.find(e => e.id == examId);
+      if (!exam) return;
+      exam.checklist[index].done = !exam.checklist[index].done;
+      saveToLocal();
+      updateDashboardStats();
+      
+      // Update inline UI elements instead of full card repaint to preserve accordion state
+      const doneCount = exam.checklist.filter(item => item.done).length;
+      document.getElementById(`chkCount-${examId}`).innerText = `${doneCount}/${exam.checklist.length} done`;
+      renderChecklistItems(examId);
+    };
+
+    window.addCustomCheckItem = function(examId) {
+      const input = document.getElementById(`newChkItem-${examId}`);
+      const text = input.value.trim();
+      if (!text) return;
+      
+      const exam = exams.find(e => e.id == examId);
+      if (!exam) return;
+      
+      if (!exam.checklist) exam.checklist = [];
+      exam.checklist.push({ text: text, done: false });
+      input.value = '';
+      saveToLocal();
+      updateDashboardStats();
+      
+      const doneCount = exam.checklist.filter(item => item.done).length;
+      document.getElementById(`chkCount-${examId}`).innerText = `${doneCount}/${exam.checklist.length} done`;
+      renderChecklistItems(examId);
+      showToast('Step added to study checklist.', 'success');
+    };
+
+    window.deleteChecklistItem = function(examId, index) {
+      const exam = exams.find(e => e.id == examId);
+      if (!exam) return;
+      exam.checklist.splice(index, 1);
+      saveToLocal();
+      updateDashboardStats();
+      
+      const doneCount = exam.checklist.filter(item => item.done).length;
+      document.getElementById(`chkCount-${examId}`).innerText = `${doneCount}/${exam.checklist.length} done`;
+      renderChecklistItems(examId);
+    };
+
+    function renderChecklistItems(examId) {
+      const exam = exams.find(e => e.id == examId);
+      if (!exam) return;
+      
+      const container = document.getElementById(`chkContainer-${examId}`);
+      if (!container) return;
+      
+      container.innerHTML = exam.checklist.map((item, idx) => `
+        <div class="flex items-center justify-between group/chk text-[11px] py-0.5">
+          <label class="flex items-center gap-2 cursor-pointer flex-1 select-none">
+            <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleChecklistItem('${examId}', ${idx})" class="w-3.5 h-3.5 text-brand-600 rounded border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 focus:ring-brand-500 focus:ring-offset-0 focus:outline-none cursor-pointer">
+            <span class="${item.done ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-600 dark:text-slate-300'}">${escapeHtml(item.text)}</span>
+          </label>
+          <button onclick="deleteChecklistItem('${examId}', ${idx})" class="text-slate-400 hover:text-rose-500 opacity-0 group-hover/chk:opacity-100 transition pl-1">
+            <i class="fas fa-times text-[10px]"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // ---------- Calendar Sync Integrations ----------
+    window.downloadExamICS = function(id) {
+      const exam = exams.find(e => e.id == id);
+      if (!exam) return;
+
+      let events = [];
+      const createEvent = (dateStr, summary) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        const dateClean = d.toISOString().slice(0, 10).replace(/-/g, '');
+        d.setDate(d.getDate() + 1);
+        const endClean = d.toISOString().slice(0, 10).replace(/-/g, '');
+        
+        return [
+          'BEGIN:VEVENT',
+          `UID:exam-${exam.id}-${summary.replace(/\s+/g, '-').toLowerCase()}`,
+          `DTSTAMP:${new Date().toISOString().slice(0, 19).replace(/[-:]/g, '')}Z`,
+          `DTSTART;VALUE=DATE:${dateClean}`,
+          `DTEND;VALUE=DATE:${endClean}`,
+          `SUMMARY:${exam.name} - ${summary}`,
+          `DESCRIPTION:${exam.notes ? exam.notes.replace(/\n/g, '\\n') : ''}`,
+          'END:VEVENT'
+        ].join('\r\n');
+      };
+
+      if (exam.formStart) events.push(createEvent(exam.formStart, "Registration Starts"));
+      if (exam.formEnd) events.push(createEvent(exam.formEnd, "Registration Deadline"));
+      if (exam.examDate) events.push(createEvent(exam.examDate, "Exam Date"));
+      if (exam.admitDate) events.push(createEvent(exam.admitDate, "Admit Card Release"));
+
+      if (events.length === 0) {
+        showToast('No dates configured for calendar syncing.', 'warning');
+        return;
+      }
+
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Exam Tracker Central//EN',
+        ...events,
+        'END:VCALENDAR'
+      ].join('\r\n');
+
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${exam.name.replace(/\s+/g, '_').toLowerCase()}_schedule.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('iCal calendar file downloaded!', 'success');
+    };
+
+    window.openGoogleCalendar = function(id) {
+      const exam = exams.find(e => e.id == id);
+      if (!exam) return;
+      
+      const dateVal = exam.examDate || exam.formEnd || exam.formStart || exam.admitDate;
+      if (!dateVal) {
+        showToast('No dates configured to sync with calendar.', 'warning');
+        return;
+      }
+      
+      const d = new Date(dateVal);
+      const startStr = d.toISOString().slice(0, 10).replace(/-/g, '');
+      d.setDate(d.getDate() + 1);
+      const endStr = d.toISOString().slice(0, 10).replace(/-/g, '');
+      const dates = `${startStr}/${endStr}`;
+      
+      const title = encodeURIComponent(`${exam.name} - Exam/Key Deadline`);
+      const details = encodeURIComponent(exam.notes || '');
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}`;
+      window.open(url, '_blank');
+    };
+
+    // ---------- Local Storage Data Management ----------
+    function loadData() {
+      const stored = localStorage.getItem('examTracker');
+      if (stored) {
+        try {
+          exams = JSON.parse(stored);
+          migrateExamsChecklist();
+        } catch(e) {
+          showToast('Corrupted database load. Re-initiating tracker.', 'warning');
+          exams = getDemoData();
+          saveToLocal();
+        }
+      } else {
+        exams = getDemoData();
+        saveToLocal();
+      }
+      
       renderExams();
-      scheduleNotificationCheck(); // check for upcoming dates after loading
+      updateDashboardStats();
+      scheduleNotificationCheck();
     }
     
     function saveToLocal() {
       localStorage.setItem('examTracker', JSON.stringify(exams));
     }
     
-    // Helper: format date YYYY-MM-DD to readable
-    function formatDate(dateStr) {
-      if(!dateStr) return '—';
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+    function getDemoData() {
+      const today = new Date();
+      
+      const formatOffset = (daysOffset) => {
+        const d = new Date(today);
+        d.setDate(today.getDate() + daysOffset);
+        return d.toISOString().slice(0,10);
+      };
+      
+      return [
+        {
+          id: Date.now() + 1,
+          name: "SSC CGL 2026",
+          type: "Government",
+          formStart: formatOffset(-15),
+          formEnd: formatOffset(3),
+          examDate: formatOffset(65),
+          admitDate: formatOffset(50),
+          adUrl: "https://ssc.nic.in",
+          notes: "Graduate level candidates, maximum age limit 32 years. Fee is ₹100.",
+          checklist: getDefaultChecklist(),
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: Date.now() + 2,
+          name: "TCS National Qualifier 2026",
+          type: "Private",
+          formStart: formatOffset(-5),
+          formEnd: formatOffset(20),
+          examDate: formatOffset(6),
+          admitDate: formatOffset(1),
+          adUrl: "https://tcs.com/careers",
+          notes: "Free registration. Standard computer-based aptitude & programming tests.",
+          checklist: getDefaultChecklist(),
+          createdAt: new Date().toISOString()
+        }
+      ];
     }
-    
-    // Countdown days until a date (positive = days left)
+
+    // ---------- Custom Dialog (Alert/Confirm) Modals ----------
+    let activeConfirmCallback = null;
+
+    function showCustomAlert(title, message) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalBody').innerText = message;
+      document.getElementById('modalConfirmBtn').classList.add('hidden');
+      document.getElementById('modalCancelBtn').innerText = 'Close';
+      document.getElementById('customModalOverlay').classList.remove('hidden');
+      activeConfirmCallback = null;
+    }
+
+    function showCustomConfirm(title, message, onConfirm) {
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('modalBody').innerText = message;
+      document.getElementById('modalConfirmBtn').classList.remove('hidden');
+      document.getElementById('modalCancelBtn').innerText = 'Cancel';
+      document.getElementById('customModalOverlay').classList.remove('hidden');
+      activeConfirmCallback = onConfirm;
+    }
+
+    function hideModal() {
+      document.getElementById('customModalOverlay').classList.add('hidden');
+      activeConfirmCallback = null;
+    }
+
+    document.getElementById('modalCancelBtn').addEventListener('click', hideModal);
+    document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+      if (typeof activeConfirmCallback === 'function') {
+        activeConfirmCallback();
+      }
+      hideModal();
+    });
+
+    document.getElementById('customModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('customModalOverlay')) {
+        hideModal();
+      }
+    });
+
+    // ---------- Toast Notification Drawer ----------
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      let typeClasses = 'bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 border-slate-700 dark:border-slate-200';
+      let iconClass = 'fa-info-circle text-brand-400 dark:text-brand-600';
+      
+      if (type === 'success') {
+        typeClasses = 'bg-emerald-900 text-emerald-50 dark:bg-emerald-50 dark:text-emerald-950 border-emerald-800 dark:border-emerald-200';
+        iconClass = 'fa-check-circle text-emerald-400 dark:text-emerald-500';
+      } else if (type === 'error') {
+        typeClasses = 'bg-rose-900 text-rose-50 dark:bg-rose-50 dark:text-rose-950 border-rose-800 dark:border-rose-200';
+        iconClass = 'fa-exclamation-circle text-rose-400 dark:text-rose-500';
+      } else if (type === 'warning') {
+        typeClasses = 'bg-amber-900 text-amber-50 dark:bg-amber-50 dark:text-amber-950 border-amber-800 dark:border-amber-200';
+        iconClass = 'fa-exclamation-triangle text-amber-400 dark:text-amber-500';
+      }
+      
+      toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border backdrop-blur-md transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto ${typeClasses}`;
+      toast.innerHTML = `
+        <i class="fas ${iconClass} text-lg shrink-0"></i>
+        <span class="text-xs font-semibold">${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      toast.offsetHeight; // Force layout calculations
+      toast.classList.remove('translate-y-2', 'opacity-0');
+      
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'scale-95');
+        toast.addEventListener('transitionend', () => {
+          toast.remove();
+        });
+      }, 3500);
+    }
+
+    // ---------- Dashboard & Computations ----------
     function daysUntil(dateStr) {
-      if(!dateStr) return null;
+      if (!dateStr) return null;
       const today = new Date();
       today.setHours(0,0,0,0);
       const target = new Date(dateStr);
       target.setHours(0,0,0,0);
-      const diff = Math.ceil((target - today) / (1000*60*60*24));
-      return diff;
+      return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
     }
     
-    // Render exam cards with filtering and search
-    let currentFilter = 'all';
-    let currentSearch = '';
-    
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function updateDashboardStats() {
+      const totalCount = exams.length;
+      let closingSoonCount = 0;
+      let examSoonCount = 0;
+      let govtCount = 0;
+      let privateCount = 0;
+      
+      exams.forEach(ex => {
+        if (ex.type === 'Government') govtCount++;
+        else if (ex.type === 'Private') privateCount++;
+        
+        const daysToFormEnd = daysUntil(ex.formEnd);
+        if (daysToFormEnd !== null && daysToFormEnd >= 0 && daysToFormEnd <= 5) {
+          closingSoonCount++;
+        }
+        
+        const daysToExam = daysUntil(ex.examDate);
+        if (daysToExam !== null && daysToExam >= 0 && daysToExam <= 7) {
+          examSoonCount++;
+        }
+      });
+      
+      document.getElementById('statTotalExams').innerText = totalCount;
+      document.getElementById('statClosingSoon').innerText = closingSoonCount;
+      document.getElementById('statExamsSoon').innerText = examSoonCount;
+      document.getElementById('statGovtPrivate').innerText = `${govtCount} / ${privateCount}`;
+    }
+
+    // ---------- Sorting, Filters, Render Engine ----------
+    function handleSortChange(sortVal) {
+      currentSort = sortVal;
+      renderExams();
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => {
+          b.className = 'filter-btn flex-1 md:flex-initial text-xs font-semibold px-4 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 transition';
+        });
+        btn.className = 'filter-btn flex-1 md:flex-initial text-xs font-semibold px-4 py-1.5 rounded-lg bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm transition';
+        currentFilter = btn.getAttribute('data-filter');
+        renderExams();
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      currentSearch = e.target.value;
+      renderExams();
+    });
+
     function renderExams() {
       let filtered = [...exams];
-      if(currentFilter !== 'all') {
+      
+      if (currentFilter !== 'all') {
         filtered = filtered.filter(ex => ex.type === currentFilter);
       }
-      if(currentSearch.trim() !== '') {
+      
+      if (currentSearch.trim() !== '') {
         const searchLower = currentSearch.toLowerCase();
         filtered = filtered.filter(ex => ex.name.toLowerCase().includes(searchLower));
       }
-      // sort by nearest exam date (null dates go last)
-      filtered.sort((a,b) => {
-        if(!a.examDate && !b.examDate) return 0;
-        if(!a.examDate) return 1;
-        if(!b.examDate) return -1;
-        return new Date(a.examDate) - new Date(b.examDate);
+      
+      filtered.sort((a, b) => {
+        if (currentSort === 'examDate') {
+          if (!a.examDate && !b.examDate) return 0;
+          if (!a.examDate) return 1;
+          if (!b.examDate) return -1;
+          return new Date(a.examDate) - new Date(b.examDate);
+        } else if (currentSort === 'formEnd') {
+          if (!a.formEnd && !b.formEnd) return 0;
+          if (!a.formEnd) return 1;
+          if (!b.formEnd) return -1;
+          return new Date(a.formEnd) - new Date(b.formEnd);
+        } else if (currentSort === 'name') {
+          return a.name.localeCompare(b.name);
+        } else if (currentSort === 'created') {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        }
+        return 0;
       });
       
       const container = document.getElementById('examsContainer');
       const emptyDiv = document.getElementById('emptyState');
       
-      if(filtered.length === 0) {
+      if (filtered.length === 0) {
         container.innerHTML = '';
         emptyDiv.classList.remove('hidden');
         return;
@@ -213,86 +1023,225 @@
       container.innerHTML = filtered.map(exam => {
         const daysToExam = daysUntil(exam.examDate);
         let examBadge = '';
-        if(daysToExam !== null && daysToExam < 0) examBadge = '<span class="text-xs bg-red-200 text-red-800 px-2 py-0.5 rounded-full">Exam passed</span>';
-        else if(daysToExam !== null && daysToExam <= 7) examBadge = '<span class="text-xs bg-orange-200 text-orange-800 px-2 py-0.5 rounded-full">⚠️ Coming soon</span>';
-        
+        if (daysToExam !== null && daysToExam < 0) {
+          examBadge = '<span class="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded-full font-medium">Passed</span>';
+        } else if (daysToExam !== null && daysToExam <= 7) {
+          examBadge = '<span class="text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><i class="fas fa-exclamation-triangle"></i> Coming soon</span>';
+        }
+
         const daysToFormEnd = daysUntil(exam.formEnd);
         let formWarning = '';
-        if(daysToFormEnd !== null && daysToFormEnd >=0 && daysToFormEnd <= 5) formWarning = `<div class="text-xs text-red-600 mt-1"><i class="fas fa-hourglass-half"></i> Form ends in ${daysToFormEnd} days</div>`;
-        
+        if (daysToFormEnd !== null && daysToFormEnd >= 0 && daysToFormEnd <= 5) {
+          formWarning = `
+            <div class="flex items-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 font-semibold mt-2 bg-rose-500/5 dark:bg-rose-500/10 px-2.5 py-1.5 rounded-lg border border-rose-500/10 animate-pulse">
+              <i class="fas fa-hourglass-half text-[10px]"></i> Form closes in ${daysToFormEnd} day${daysToFormEnd !== 1 ? 's' : ''}!
+            </div>`;
+        } else if (daysToFormEnd !== null && daysToFormEnd < 0) {
+          formWarning = `
+            <div class="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-600 font-medium mt-2 bg-slate-500/5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800/50">
+              <i class="fas fa-ban text-[10px]"></i> Form registration ended
+            </div>`;
+        }
+
+        const daysToAdmit = daysUntil(exam.admitDate);
+        let admitWarning = '';
+        if (daysToAdmit !== null && daysToAdmit >= 0 && daysToAdmit <= 3) {
+          admitWarning = '<span class="text-[10px] text-brand-600 dark:text-brand-400 bg-brand-500/10 border border-brand-500/10 rounded-full px-2 py-0.5 font-bold">Soon</span>';
+        } else if (daysToAdmit !== null && daysToAdmit < 0) {
+          admitWarning = '<span class="text-[10px] text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 rounded-full px-2 py-0.5 font-medium">Released</span>';
+        }
+
+        const checklist = exam.checklist || [];
+        const doneCount = checklist.filter(item => item.done).length;
+
         return `
-          <div class="exam-card bg-white rounded-xl shadow-md p-4 border-l-4 ${exam.type === 'Government' ? 'border-indigo-500' : 'border-emerald-500'}">
-            <div class="flex justify-between items-start">
-              <h3 class="font-bold text-lg text-gray-800">${escapeHtml(exam.name)}</h3>
-              <div class="flex gap-1">
-                <button onclick="editExam('${exam.id}')" class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
-                <button onclick="deleteExam('${exam.id}')" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
+          <div class="exam-card bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex justify-between items-start gap-2">
+                <div class="space-y-1">
+                  <span class="inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md ${exam.type === 'Government' ? 'bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 border border-brand-200/50 dark:border-brand-900/50' : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-900/50'}">
+                    ${exam.type}
+                  </span>
+                  <h3 class="font-bold text-base text-slate-800 dark:text-slate-100 leading-tight">${escapeHtml(exam.name)}</h3>
+                </div>
+                
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button onclick="editExam('${exam.id}')" title="Edit Exam" class="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-50 dark:bg-slate-850 hover:bg-brand-55 hover:text-brand-600 dark:hover:text-brand-400 border border-slate-200/40 dark:border-slate-800 transition">
+                    <i class="fas fa-pen text-xs"></i>
+                  </button>
+                  <button onclick="deleteExam('${exam.id}')" title="Delete Exam" class="w-8 h-8 rounded-lg flex items-center justify-center bg-slate-50 dark:bg-slate-850 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200/40 dark:border-slate-800 transition">
+                    <i class="fas fa-trash-alt text-xs"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="space-y-2 text-xs border-t border-slate-100 dark:border-slate-800/50 pt-3">
+                ${exam.formStart || exam.formEnd ? `
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                      <i class="fas fa-calendar-plus text-slate-400 w-4"></i>
+                      <span>Registration</span>
+                    </div>
+                    <span class="font-semibold text-slate-700 dark:text-slate-300">
+                      ${formatDate(exam.formStart)} <span class="text-slate-400 dark:text-slate-600 font-normal">to</span> ${formatDate(exam.formEnd)}
+                    </span>
+                  </div>` : ''}
+
+                ${exam.examDate ? `
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                      <i class="fas fa-calendar-check text-slate-400 w-4"></i>
+                      <span>Exam Date</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-semibold text-slate-700 dark:text-slate-300">${formatDate(exam.examDate)}</span>
+                      ${daysToExam !== null && daysToExam >= 0 ? `<span class="text-[10px] text-brand-600 dark:text-brand-400 font-medium">(${daysToExam}d left)</span>` : ''}
+                      ${examBadge}
+                    </div>
+                  </div>` : ''}
+
+                ${exam.admitDate ? `
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                      <i class="fas fa-id-card text-slate-400 w-4"></i>
+                      <span>Admit Card</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-semibold text-slate-700 dark:text-slate-300">${formatDate(exam.admitDate)}</span>
+                      ${admitWarning}
+                    </div>
+                  </div>` : ''}
+              </div>
+              
+              ${formWarning}
+
+              <!-- Collapsible Preparation Checklist Drawer -->
+              <div class="mt-3 border-t border-slate-100 dark:border-slate-800/60 pt-3">
+                <button onclick="toggleChecklist('${exam.id}')" class="text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 flex items-center justify-between w-full transition">
+                  <span class="flex items-center gap-1.5"><i class="fas fa-tasks text-slate-400"></i> Prep Checklist</span>
+                  <span id="chkCount-${exam.id}" class="bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full">${doneCount}/${checklist.length} done</span>
+                </button>
+                
+                <div id="chkList-${exam.id}" class="mt-2.5 pl-2 border-l-2 border-slate-100 dark:border-slate-800/80 space-y-2 hidden">
+                  <div id="chkContainer-${exam.id}" class="space-y-1.5">
+                    <!-- Loaded dynamically via js function -->
+                  </div>
+                  
+                  <!-- Add Custom Checklist Step -->
+                  <div class="flex gap-1.5 mt-2.5 pt-1.5 border-t border-slate-100 dark:border-slate-800/50">
+                    <input type="text" id="newChkItem-${exam.id}" placeholder="Custom step..." class="flex-1 bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/80 rounded-lg px-2 py-1 text-[10px] focus:outline-none focus:ring-1 focus:ring-brand-500">
+                    <button onclick="addCustomCheckItem('${exam.id}')" class="bg-brand-600 hover:bg-brand-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold transition flex items-center justify-center">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="text-sm text-gray-500 mb-2 flex items-center gap-1">
-              <i class="fas fa-tag"></i> ${exam.type}
-              ${examBadge}
+
+            <div class="space-y-3 mt-4">
+              ${exam.notes ? `
+                <div class="text-xs text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl p-3 border border-slate-100 dark:border-slate-800/40 relative">
+                  <i class="fas fa-quote-left absolute -top-1.5 -left-1 text-[10px] text-slate-200 dark:text-slate-800"></i>
+                  <span class="block line-clamp-3 leading-relaxed">${escapeHtml(exam.notes)}</span>
+                </div>` : ''}
+              
+              <!-- Action Shortcuts Menu (Google search, Calendar export) -->
+              <div class="grid grid-cols-3 gap-2">
+                <a href="${exam.adUrl ? exam.adUrl : '#'}" ${exam.adUrl ? 'target="_blank"' : 'onclick="showToast(\'No official notice URL stored\', \'warning\'); return false;"'} class="flex items-center justify-center gap-1 py-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 hover:bg-brand-50 dark:hover:bg-brand-950/30 hover:border-brand-100 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition">
+                  <i class="fas fa-link text-[9px]"></i> Notice
+                </a>
+                
+                <button onclick="openGoogleCalendar('${exam.id}')" class="flex items-center justify-center gap-1 py-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 hover:bg-brand-50 dark:hover:bg-brand-950/30 hover:border-brand-100 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition">
+                  <i class="fab fa-google text-[9px]"></i> GCal
+                </button>
+                
+                <button onclick="downloadExamICS('${exam.id}')" class="flex items-center justify-center gap-1 py-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 hover:bg-brand-50 dark:hover:bg-brand-950/30 hover:border-brand-100 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 transition">
+                  <i class="fas fa-file-export text-[9px]"></i> iCal
+                </button>
+              </div>
+
+              <!-- Quick Search Updates Shortcut -->
+              <a href="https://www.google.com/search?q=${encodeURIComponent(exam.name + ' exam schedule admit card result 2026')}" target="_blank" class="w-full flex items-center justify-center gap-1.5 text-[10px] font-bold py-1.5 px-3 rounded-xl bg-slate-50 dark:bg-brand-950/20 border border-slate-200/50 dark:border-brand-900/30 hover:bg-brand-50 dark:hover:bg-brand-950/40 hover:border-brand-100 dark:hover:border-brand-900/50 text-brand-600 dark:text-brand-400 transition">
+                <i class="fas fa-search text-[9px]"></i> Check Google for Updates
+              </a>
             </div>
-            <div class="space-y-1 text-sm mt-2">
-              ${exam.formStart ? `<div><i class="fas fa-calendar-plus w-5 text-gray-500"></i> Form: ${formatDate(exam.formStart)} → ${formatDate(exam.formEnd)}</div>` : ''}
-              ${exam.examDate ? `<div><i class="fas fa-calendar-check w-5 text-gray-500"></i> Exam: ${formatDate(exam.examDate)} ${daysToExam !== null && daysToExam >=0 ? `(in ${daysToExam} days)` : daysToExam !== null && daysToExam<0 ? '(passed)' : ''}</div>` : ''}
-              ${exam.admitDate ? `<div><i class="fas fa-id-card w-5 text-gray-500"></i> Admit Card: ${formatDate(exam.admitDate)} ${daysUntil(exam.admitDate) !== null && daysUntil(exam.admitDate) <= 3 && daysUntil(exam.admitDate) >=0 ? '<span class="text-red-500">🔥 soon</span>' : ''}</div>` : ''}
-              ${formWarning}
-            </div>
-            ${exam.adUrl ? `<div class="mt-2"><a href="${exam.adUrl}" target="_blank" class="text-indigo-600 text-xs hover:underline"><i class="fas fa-link"></i> Official Notice</a></div>` : ''}
-            ${exam.notes ? `<div class="mt-2 text-gray-600 text-xs border-t pt-2"><i class="fas fa-sticky-note"></i> ${escapeHtml(exam.notes)}</div>` : ''}
           </div>
         `;
       }).join('');
+
+      // Populate checklist items inline for all cards immediately
+      filtered.forEach(ex => {
+        renderChecklistItems(ex.id);
+      });
     }
-    
+
     function escapeHtml(str) {
-      if(!str) return '';
+      if (!str) return '';
       return str.replace(/[&<>]/g, function(m) {
-        if(m === '&') return '&amp;';
-        if(m === '<') return '&lt;';
-        if(m === '>') return '&gt;';
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
         return m;
       }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
         return c;
       });
     }
-    
-    // Save (Create or Update)
+
+    // ---------- Operations: Save / Edit / Delete ----------
     function saveExam() {
       const name = document.getElementById('examName').value.trim();
-      if(!name) { alert("Exam name is required"); return; }
+      if (!name) {
+        showToast('Exam name is required', 'warning');
+        return;
+      }
+      
+      const formStartVal = document.getElementById('formStart').value || null;
+      const formEndVal = document.getElementById('formEnd').value || null;
+      const examDateVal = document.getElementById('examDate').value || null;
+      const admitDateVal = document.getElementById('admitDate').value || null;
+      
+      if (formStartVal && formEndVal && new Date(formEndVal) < new Date(formStartVal)) {
+        showToast('Form End Date cannot be before Form Start Date.', 'warning');
+        return;
+      }
+
+      const checklistVal = editId !== null ? (exams.find(e => e.id == editId).checklist || getDefaultChecklist()) : getDefaultChecklist();
+
       const examData = {
         name: name,
         type: document.getElementById('examType').value,
-        formStart: document.getElementById('formStart').value || null,
-        formEnd: document.getElementById('formEnd').value || null,
-        examDate: document.getElementById('examDate').value || null,
-        admitDate: document.getElementById('admitDate').value || null,
+        formStart: formStartVal,
+        formEnd: formEndVal,
+        examDate: examDateVal,
+        admitDate: admitDateVal,
         adUrl: document.getElementById('adUrl').value.trim() || null,
         notes: document.getElementById('notes').value.trim() || null,
+        checklist: checklistVal,
         createdAt: new Date().toISOString()
       };
       
-      if(editId !== null) {
-        // update existing
+      if (editId !== null) {
         const index = exams.findIndex(e => e.id == editId);
-        if(index !== -1) {
+        if (index !== -1) {
           exams[index] = { ...exams[index], ...examData, id: editId };
+          showToast('Exam schedule updated successfully!', 'success');
         }
         editId = null;
         document.getElementById('formTitle').innerText = "Add New Exam";
+        document.getElementById('formTitleIcon').className = 'w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center text-base';
+        document.getElementById('formTitleIcon').innerHTML = '<i class="fas fa-plus-circle"></i>';
         document.getElementById('cancelEditBtn').classList.add('hidden');
       } else {
-        // add new
         const newId = Date.now();
         examData.id = newId;
         exams.push(examData);
+        showToast('Exam schedule added to planner!', 'success');
       }
+      
       saveToLocal();
       clearForm();
       renderExams();
-      // after saving, check notifications for the newly added exam dates
+      updateDashboardStats();
       scheduleNotificationCheck();
     }
     
@@ -305,141 +1254,312 @@
       document.getElementById('admitDate').value = '';
       document.getElementById('adUrl').value = '';
       document.getElementById('notes').value = '';
+      
+      document.querySelectorAll('.datepicker').forEach(el => {
+        if (el._flatpickr) el._flatpickr.clear();
+      });
+      
       editId = null;
       document.getElementById('formTitle').innerText = "Add New Exam";
+      document.getElementById('formTitleIcon').className = 'w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center text-base';
+      document.getElementById('formTitleIcon').innerHTML = '<i class="fas fa-plus-circle"></i>';
       document.getElementById('cancelEditBtn').classList.add('hidden');
     }
     
     window.editExam = function(id) {
       const exam = exams.find(e => e.id == id);
-      if(!exam) return;
+      if (!exam) return;
+      
       editId = id;
       document.getElementById('examName').value = exam.name;
       document.getElementById('examType').value = exam.type;
-      document.getElementById('formStart').value = exam.formStart || '';
-      document.getElementById('formEnd').value = exam.formEnd || '';
-      document.getElementById('examDate').value = exam.examDate || '';
-      document.getElementById('admitDate').value = exam.admitDate || '';
+      
+      const setDateVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el._flatpickr) {
+          el._flatpickr.setDate(val || '');
+        } else {
+          el.value = val || '';
+        }
+      };
+      
+      setDateVal('formStart', exam.formStart);
+      setDateVal('formEnd', exam.formEnd);
+      setDateVal('examDate', exam.examDate);
+      setDateVal('admitDate', exam.admitDate);
+      
       document.getElementById('adUrl').value = exam.adUrl || '';
       document.getElementById('notes').value = exam.notes || '';
-      document.getElementById('formTitle').innerText = "✏️ Edit Exam";
+      
+      document.getElementById('formTitle').innerText = "Edit Exam Schedule";
+      document.getElementById('formTitleIcon').className = 'w-8 h-8 rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center text-base';
+      document.getElementById('formTitleIcon').innerHTML = '<i class="fas fa-pen"></i>';
       document.getElementById('cancelEditBtn').classList.remove('hidden');
+      
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     
     window.deleteExam = function(id) {
-      if(confirm("Delete this exam permanently?")) {
-        exams = exams.filter(e => e.id != id);
-        saveToLocal();
-        if(editId == id) clearForm();
-        renderExams();
-      }
+      const exam = exams.find(e => e.id == id);
+      if (!exam) return;
+      
+      showCustomConfirm(
+        'Delete Exam',
+        `Are you sure you want to delete "${exam.name}" permanently from your schedule list?`,
+        () => {
+          exams = exams.filter(e => e.id != id);
+          saveToLocal();
+          if (editId == id) clearForm();
+          renderExams();
+          updateDashboardStats();
+          showToast('Exam deleted successfully.', 'info');
+        }
+      );
     };
-    
-    document.getElementById('saveBtn').addEventListener('click', saveExam);
-    document.getElementById('cancelEditBtn').addEventListener('click', clearForm);
-    
-    // Filter & Search listeners
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('bg-indigo-100', 'text-indigo-800'));
-        btn.classList.add('bg-indigo-100', 'text-indigo-800');
-        currentFilter = btn.getAttribute('data-filter');
-        renderExams();
-      });
-    });
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      currentSearch = e.target.value;
-      renderExams();
-    });
-    
-    // ---------- NOTIFICATION LOGIC (Browser Notification API) ----------
-    let notificationPermission = false;
+
+    // ---------- Storage Backups Export / Import / Clear ----------
+    function exportBackup() {
+      const dataStr = localStorage.getItem('examTracker') || '[]';
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `exam_tracker_backup_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Backup JSON exported successfully!', 'success');
+    }
+
+    function triggerImport() {
+      document.getElementById('importFileInput').click();
+    }
+
+    function handleImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (Array.isArray(imported)) {
+            const isValid = imported.every(item => item && typeof item === 'object' && item.name);
+            if (!isValid && imported.length > 0) {
+              showToast('Invalid backup file structure.', 'error');
+              return;
+            }
+            
+            showCustomConfirm(
+              'Import Backup',
+              `This action will import ${imported.length} exam schedules. Do you want to proceed?`,
+              () => {
+                const currentIds = new Set(exams.map(e => e.id));
+                let importCount = 0;
+                
+                imported.forEach(item => {
+                  if (!item.checklist || !Array.isArray(item.checklist)) {
+                    item.checklist = getDefaultChecklist();
+                  }
+                  if (!currentIds.has(item.id)) {
+                    exams.push(item);
+                    importCount++;
+                  } else {
+                    const index = exams.findIndex(e => e.id === item.id);
+                    if (index !== -1) exams[index] = item;
+                    importCount++;
+                  }
+                });
+                
+                saveToLocal();
+                renderExams();
+                updateDashboardStats();
+                showToast(`Successfully imported/merged ${importCount} schedules!`, 'success');
+              }
+            );
+          } else {
+            showToast('JSON must contain a valid array of exam objects.', 'error');
+          }
+        } catch(err) {
+          showToast('Failed to parse the backup file JSON content.', 'error');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function clearAllData() {
+      showCustomConfirm(
+        'Clear Tracker Storage?',
+        'This will delete ALL exam schedules from your browser storage permanently. We recommend exporting a backup first. Do you want to proceed?',
+        () => {
+          showCustomConfirm(
+            'Confirm Permanent Deletion',
+            'Are you absolutely sure? This cannot be undone.',
+            () => {
+              exams = [];
+              saveToLocal();
+              clearForm();
+              renderExams();
+              updateDashboardStats();
+              showToast('All tracker data cleared.', 'info');
+            }
+          );
+        }
+      );
+    }
+
+    // ---------- Print Document Layout ----------
+    window.triggerPrint = function() {
+      let printArea = document.getElementById('printArea');
+      if (!printArea) {
+        printArea = document.createElement('div');
+        printArea.id = 'printArea';
+        printArea.className = 'hidden';
+        document.body.appendChild(printArea);
+      }
+      
+      const rows = exams.map((ex, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td><strong>${ex.name}</strong><br><small>${ex.type}</small></td>
+          <td>${formatDate(ex.formStart)} to ${formatDate(ex.formEnd)}</td>
+          <td>${formatDate(ex.examDate)}</td>
+          <td>${formatDate(ex.admitDate)}</td>
+          <td>
+            ${ex.notes ? `<div style="margin-bottom: 5px;"><em>${ex.notes}</em></div>` : ''}
+            <div><small>Checklist: ${ex.checklist.filter(i => i.done).length}/${ex.checklist.length} done</small></div>
+          </td>
+        </tr>
+      `).join('');
+      
+      printArea.innerHTML = `
+        <div style="font-family: sans-serif; padding: 20px;">
+          <h1 style="margin-bottom: 5px;">Exam Tracker Schedule List</h1>
+          <p style="margin-bottom: 20px; color: #666; font-size: 12px;">Generated on ${new Date().toLocaleDateString('en-IN')}</p>
+          <table>
+            <thead>
+              <tr style="background: #f1f5f9;">
+                <th style="width: 5%">#</th>
+                <th style="width: 25%">Exam Name & Type</th>
+                <th style="width: 20%">Form Registration</th>
+                <th style="width: 15%">Exam Date</th>
+                <th style="width: 15%">Admit Card Release</th>
+                <th style="width: 20%">Notes & Prep Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows || '<tr><td colspan="6" style="text-align:center;">No exams tracked</td></tr>'}
+            </tbody>
+          </table>
+        </div>
+      `;
+      window.print();
+    };
+
+    // ---------- Notification Core logic (Local storage tracked) ----------
     function requestNotificationPermission() {
       if ("Notification" in window) {
         Notification.requestPermission().then(perm => {
-          if(perm === "granted") {
+          if (perm === "granted") {
             notificationPermission = true;
-            alert("Notifications enabled! You'll get reminders for upcoming exams.");
+            showToast("Desktop notifications enabled successfully!", "success");
+            scheduleNotificationCheck();
           } else {
-            alert("Notification permission denied. You can enable it manually in browser settings.");
+            showToast("Notification permission denied by browser.", "error");
           }
         });
       } else {
-        alert("Your browser does not support desktop notifications.");
+        showToast("Your browser does not support desktop notifications.", "warning");
       }
     }
-    
-    // Check all exams and send notification if any date is within 2 days (or exactly today)
+
     function checkUpcomingDatesAndNotify() {
       if (!notificationPermission && Notification.permission === "granted") {
         notificationPermission = true;
       }
-      if (!notificationPermission && Notification.permission !== "granted") return;
       
+      const thresholdDays = parseInt(localStorage.getItem('notificationWindow') || '2', 10);
       const today = new Date();
       today.setHours(0,0,0,0);
-      let notificationsSent = false;
       
+      let notifiedLog = {};
+      const savedLog = localStorage.getItem('examTrackerNotifiedEvents');
+      if (savedLog) {
+        try {
+          notifiedLog = JSON.parse(savedLog);
+        } catch (e) {
+          notifiedLog = {};
+        }
+      }
+
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setDate(today.getDate() - 30);
+      for (const k in notifiedLog) {
+        if (new Date(notifiedLog[k]) < oneMonthAgo) {
+          delete notifiedLog[k];
+        }
+      }
+
+      let browserNotifySent = false;
+      let toastMessages = [];
+
       exams.forEach(exam => {
         const dateFields = [
-          { label: "Form Start", date: exam.formStart },
-          { label: "Form End", date: exam.formEnd },
-          { label: "Exam Date", date: exam.examDate },
-          { label: "Admit Card Release", date: exam.admitDate }
+          { key: "formStart", label: "Form Start Date", date: exam.formStart },
+          { key: "formEnd", label: "Form Deadline", date: exam.formEnd },
+          { key: "examDate", label: "Exam Date", date: exam.examDate },
+          { key: "admitDate", label: "Admit Card Release Date", date: exam.admitDate }
         ];
+
         dateFields.forEach(field => {
-          if(field.date) {
+          if (field.date) {
             const targetDate = new Date(field.date);
             targetDate.setHours(0,0,0,0);
-            const diffDays = Math.ceil((targetDate - today) / (1000*60*60*24));
-            if(diffDays >= 0 && diffDays <= 2) {
-              // send notification (avoid spamming multiple times per reload - we can store last sent flag, but for simplicity we notify once per page load)
-              // to prevent repeats, we could use localStorage flag but for demo it's fine.
-              new Notification("📢 Exam Reminder", {
-                body: `${exam.name}: ${field.label} is on ${formatDate(field.date)} (in ${diffDays} day${diffDays!==1 ? 's' : ''})`,
-                icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-              });
-              notificationsSent = true;
+            
+            const diffDays = Math.ceil((targetDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays >= 0 && diffDays <= thresholdDays) {
+              const eventKey = `${exam.id}_${field.key}_${field.date}`;
+              
+              if (!notifiedLog[eventKey]) {
+                const messageText = `${exam.name}: ${field.label} is on ${formatDate(field.date)} (in ${diffDays} day${diffDays !== 1 ? 's' : ''})`;
+                
+                if (notificationPermission) {
+                  new Notification("📢 Exam Tracker Alert", {
+                    body: messageText,
+                    icon: "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                  });
+                  browserNotifySent = true;
+                } else {
+                  toastMessages.push(messageText);
+                }
+                
+                notifiedLog[eventKey] = new Date().toISOString();
+              }
             }
           }
         });
       });
-      if(notificationsSent) {
-        console.log("Notifications sent for upcoming dates.");
+
+      localStorage.setItem('examTrackerNotifiedEvents', JSON.stringify(notifiedLog));
+
+      if (toastMessages.length > 0) {
+        toastMessages.forEach(msg => {
+          showToast(`Upcoming: ${msg}`, 'warning');
+        });
       }
     }
-    
+
     function scheduleNotificationCheck() {
-      // check immediately on load and then every 6 hours
       checkUpcomingDatesAndNotify();
-      if(window.notificationInterval) clearInterval(window.notificationInterval);
+      
+      if (window.notificationInterval) clearInterval(window.notificationInterval);
       window.notificationInterval = setInterval(() => {
         checkUpcomingDatesAndNotify();
       }, 6 * 60 * 60 * 1000);
     }
-    
-    // enable notifications button
-    document.getElementById('enableNotificationsBtn').addEventListener('click', () => {
-      requestNotificationPermission();
-    });
-    
-    // init flatpickr on all .datepicker elements
-    function initDatepickers() {
-      flatpickr(".datepicker", {
-        dateFormat: "Y-m-d",
-        allowInput: true,
-        altInput: true,
-        altFormat: "d M Y"
-      });
-    }
-    
-    // Re-run flatpickr after dynamic content (no dynamic inputs except static form)
-    initDatepickers();
-    loadData();
-    
-    // If new exam fields added later, ensure flatpickr rebinds? Not needed because form is static.
-    // Also set up beforeunload to save? Already saved on each operation.
   </script>
 </body>
 </html>
