@@ -2,7 +2,7 @@
 
 A **single‑file HTML/JS/CSS** application to store, track, and manage all key dates for government & private exams – form start/end, exam date, admit card release date, official notices, checklists, and calendar reminders.
 
-No backend, no database setup – runs entirely inside your browser and saves all data locally on your device, with optional cloud backup using GitHub Gists.
+No backend, no database setup – runs entirely inside your browser and saves all data locally on your device, with optional client-side cloud backup using Google Drive.
 
 ---
 
@@ -10,10 +10,11 @@ No backend, no database setup – runs entirely inside your browser and saves al
 
 - **Dynamic Theme Palette Switcher**: Choose from 5 sleek color schemes (*Midnight Indigo*, *Forest Jade*, *Crimson Velvet*, *Sunset Amber*, or *Nordic Slate*) to combat color fatigue.
 - **Interactive Prep Checklists**: Every exam card includes a collapsible checklist drawer to track preparation steps (e.g., *Fill application*, *Pay fees*, *Download admit card*) and add custom milestones.
-- **Cloud Backup & Restore**:
-  - Securely upload your local schedule data to a private, secret **GitHub Gist**.
-  - Configure your own **GitHub Personal Access Token (PAT)** and Gist ID in the settings modal.
-  - Sync and restore your data across multiple devices (laptops, phones) entirely from the browser client.
+- **Google Drive Cloud Sync**:
+  - Securely backup your local schedule data directly to a private file named `exam_tracker_backup.json` inside your own Google Drive.
+  - Save your own **Google Client ID** in the settings modal.
+  - Sign In with Google directly on the app (using the Google Identity Services OAuth 2.0 Implicit Flow).
+  - Sync, backup, and restore your exam schedule database across multiple devices.
 - **Calendar Integrations**:
   - **Google Calendar (GCal)**: Instantly generate an event in your Google Calendar for your exam date.
   - **iCalendar (.ics) Export**: Download a calendar configuration file to import all dates (registration, deadlines, exams) into Outlook, Apple Calendar, or mobile calendars.
@@ -62,11 +63,13 @@ Some browsers block permission prompts over local file protocols. If notificatio
 - All exams are stored locally under the browser storage key `examTracker`.
 - **Export Backup**: Click the **Export** button in the header to download a `.json` backup file of all schedules.
 - **Import Backup**: Click the **Import** button and select your exported `.json` file to safely merge/restore your exam planner list.
-- **Cloud Backup & Restore**:
-  1. Click the **Cloud Settings (gear icon)** in the header.
-  2. Input your GitHub Personal Access Token (PAT) with the `gist` scope enabled.
-  3. Click **Backup** to create (or update) a secret Gist containing your data.
-  4. Copy the returned Gist ID to access and restore this backup from another device.
+- **Google Drive Cloud Sync**:
+  1. Go to the [Google Cloud Console](https://console.cloud.google.com/), create a new project, enable the **Google Drive API**, and configure the **OAuth consent screen** (External user type, add your email as test user, add scopes `https://www.googleapis.com/auth/drive.file` and `https://www.googleapis.com/auth/userinfo.profile`).
+  2. Create an **OAuth Client ID** (Application type: *Web application*) and add your local/deployed URL (e.g., `http://localhost:8000` or your GitHub Pages domain) to **Authorized JavaScript origins**.
+  3. Click the **Google Drive Settings (gear icon)** in the app header and input your **Google Client ID**.
+  4. Click **Sign In** to authenticate with your Google Account, granting access to manage only files created by the app.
+  5. Click **Backup** to upload your database to a file named `exam_tracker_backup.json` in your Google Drive.
+  6. Click **Restore** to download that file and overwrite your local storage list.
 - **Reset Storage**: Click the **Reset** button in the header to wipe all tracker data. This action is guarded by confirmation dialog overlays to prevent accidental data loss.
 
 ---
