@@ -649,6 +649,13 @@
         scheduleNotificationCheck();
       });
 
+      // Bind Notification Button Click & Update state
+      const notifyBtn = document.getElementById('enableNotificationsBtn');
+      if (notifyBtn) {
+        notifyBtn.addEventListener('click', requestNotificationPermission);
+      }
+      updateNotificationBtnState();
+
       // Init Google Drive Client-Side Sync
       initGoogleDriveSync();
     });
@@ -1998,9 +2005,35 @@
     };
 
     // ---------- Notification Core logic (Local storage tracked) ----------
-    function requestNotificationPermission() {
+    window.updateNotificationBtnState = function() {
+      const btn = document.getElementById('enableNotificationsBtn');
+      if (!btn) return;
+      
+      if ("Notification" in window) {
+        if (Notification.permission === "granted") {
+          btn.innerHTML = '<i class="fas fa-bell text-[11px]"></i> Notifications Enabled';
+          btn.className = 'flex items-center gap-2 text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 px-3 py-2 rounded-xl cursor-default transition';
+          btn.disabled = true;
+        } else if (Notification.permission === "denied") {
+          btn.innerHTML = '<i class="fas fa-bell-slash text-[11px]"></i> Notifications Blocked';
+          btn.className = 'flex items-center gap-2 text-xs font-semibold bg-rose-500/10 text-rose-700 dark:text-rose-400 border border-rose-500/20 px-3 py-2 rounded-xl transition';
+          btn.disabled = false;
+        } else {
+          btn.innerHTML = '<i class="fas fa-bell text-[11px]"></i> Enable Notifications';
+          btn.className = 'flex items-center gap-2 text-xs font-semibold bg-amber-500/10 text-amber-700 dark:text-amber-400 hover:bg-amber-500/20 px-3 py-2 rounded-xl transition';
+          btn.disabled = false;
+        }
+      } else {
+        btn.innerHTML = '<i class="fas fa-bell-slash text-[11px]"></i> Notifications Not Supported';
+        btn.className = 'flex items-center gap-2 text-xs font-semibold bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 px-3 py-2 rounded-xl transition';
+        btn.disabled = true;
+      }
+    };
+
+    window.requestNotificationPermission = function() {
       if ("Notification" in window) {
         Notification.requestPermission().then(perm => {
+          updateNotificationBtnState();
           if (perm === "granted") {
             notificationPermission = true;
             showToast("Desktop notifications enabled successfully!", "success");
@@ -2012,11 +2045,12 @@
       } else {
         showToast("Your browser does not support desktop notifications.", "warning");
       }
-    }
+    };
 
     function checkUpcomingDatesAndNotify() {
       if (!notificationPermission && Notification.permission === "granted") {
         notificationPermission = true;
+        updateNotificationBtnState();
       }
       
       const thresholdDays = parseInt(localStorage.getItem('notificationWindow') || '2', 10);
