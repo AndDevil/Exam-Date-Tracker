@@ -440,69 +440,88 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
       
       <!-- Input Form Card -->
-      <section class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-          <span id="formTitleIcon" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center text-base">
-            <i class="fas fa-plus-circle"></i>
-          </span>
-          <span id="formTitle">Add New Exam</span>
-        </h2>
+      <section class="lg:col-span-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-md p-6 transition-all duration-300">
+        <!-- Interactive Collapsible Header -->
+        <div onclick="toggleExamForm()" class="flex items-center justify-between cursor-pointer select-none group">
+          <h2 class="text-xl font-bold flex items-center gap-2">
+            <span id="formTitleIcon" class="w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center text-base">
+              <i class="fas fa-plus-circle"></i>
+            </span>
+            <span id="formTitle">Add New Exam</span>
+          </h2>
+          <button type="button" class="w-8 h-8 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition">
+            <i id="examFormCollapseIcon" class="fas fa-chevron-down text-xs transition-transform duration-350"></i>
+          </button>
+        </div>
         
-        <form onsubmit="event.preventDefault();" class="space-y-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Name *</label>
-            <input type="text" id="examName" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none dark:focus:border-brand-500/50" placeholder="e.g., UPSC Prelims 2026" required>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Category</label>
-            <select id="examType" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none dark:focus:border-brand-500/50">
-              <option value="Government">🏛️ Government</option>
-              <option value="Private">💼 Private</option>
-            </select>
-          </div>
-          
-          <div class="grid grid-cols-2 gap-3">
+        <!-- Form Content (Hidden/Collapsed by default) -->
+        <div id="examFormContent" class="hidden mt-5">
+          <form onsubmit="event.preventDefault();" class="space-y-4">
             <div>
-              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Form Start Date</label>
-              <input type="text" id="formStart" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Name *</label>
+              <input type="text" id="examName" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none dark:focus:border-brand-500/50" placeholder="e.g., UPSC Prelims 2026" required>
             </div>
+            
             <div>
-              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Form End Date</label>
-              <input type="text" id="formEnd" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Category</label>
+              <select id="examType" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none dark:focus:border-brand-500/50">
+                <option value="Government">🏛️ Government</option>
+                <option value="Private">💼 Private</option>
+              </select>
             </div>
-          </div>
-          
-          <div class="grid grid-cols-2 gap-3">
+            
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Form Start Date</label>
+                <input type="text" id="formStart" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Form End Date</label>
+                <input type="text" id="formEnd" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Date</label>
+                <input type="text" id="examDate" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Admit Card Release</label>
+                <input type="text" id="admitDate" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              </div>
+            </div>
+            
             <div>
-              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Exam Date</label>
-              <input type="text" id="examDate" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Official Advertisement URL</label>
+              <input type="url" id="adUrl" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none" placeholder="https://example.com/notice">
             </div>
+            
             <div>
-              <label class="block text-xs font-semibold mb-1 text-slate-600 dark:text-slate-300">Admit Card Release</label>
-              <input type="text" id="admitDate" class="datepicker w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20" placeholder="Pick Date">
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-sm font-semibold text-slate-600 dark:text-slate-300">Important Notes</label>
+                <!-- Formatting Toolbar -->
+                <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 rounded-lg p-0.5 border border-slate-200 dark:border-slate-700 text-xs">
+                  <button type="button" onclick="insertFormat('bold')" title="Bold (Ctrl+B)" class="w-6 h-6 flex items-center justify-center rounded hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 font-bold transition">B</button>
+                  <button type="button" onclick="insertFormat('italic')" title="Italic (Ctrl+I)" class="w-6 h-6 flex items-center justify-center rounded hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 italic transition">I</button>
+                  <button type="button" onclick="insertFormat('bullet')" title="Bullet List" class="w-6 h-6 flex items-center justify-center rounded hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 transition"><i class="fas fa-list-ul text-[10px]"></i></button>
+                  <button type="button" onclick="insertFormat('number')" title="Numbered List" class="w-6 h-6 flex items-center justify-center rounded hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-400 transition"><i class="fas fa-list-ol text-[10px]"></i></button>
+                  <button type="button" onclick="autoOrganizeNotes()" title="Auto-Organize into Bullet Points" class="px-1.5 h-6 flex items-center justify-center rounded hover:bg-white dark:hover:bg-slate-900 text-brand-600 dark:text-brand-400 font-bold gap-1 transition text-[10px]"><i class="fas fa-magic text-[9px]"></i> Auto</button>
+                </div>
+              </div>
+              <textarea id="notes" rows="3" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none resize-none" placeholder="Eligibility limits, exam patterns, fee rules..."></textarea>
             </div>
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Official Advertisement URL</label>
-            <input type="url" id="adUrl" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none" placeholder="https://example.com/notice">
-          </div>
-          
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-slate-600 dark:text-slate-300">Important Notes</label>
-            <textarea id="notes" rows="3" class="w-full border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 focus:outline-none resize-none" placeholder="Eligibility limits, exam patterns, fee rules..."></textarea>
-          </div>
-          
-          <div class="flex gap-2 pt-2">
-            <button id="saveBtn" onclick="saveExam()" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-brand-600/10 hover:shadow-brand-600/20 transition flex items-center justify-center gap-2">
-              <i class="fas fa-save"></i> Save Exam
-            </button>
-            <button id="cancelEditBtn" onclick="clearForm()" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-semibold py-2.5 px-4 rounded-xl hidden transition">
-              Cancel
-            </button>
-          </div>
-        </form>
+            
+            <div class="flex gap-2 pt-2">
+              <button id="saveBtn" onclick="saveExam()" class="flex-1 bg-brand-600 hover:bg-brand-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-brand-600/10 hover:shadow-brand-600/20 transition flex items-center justify-center gap-2">
+                <i class="fas fa-save"></i> Save Exam
+              </button>
+              <button id="cancelEditBtn" onclick="clearForm()" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-semibold py-2.5 px-4 rounded-xl hidden transition">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
 
       <!-- list View Section -->
@@ -1226,12 +1245,11 @@
                 </div>
               </div>
             </div>
-
             <div class="space-y-3 mt-4">
               ${exam.notes ? `
                 <div class="text-xs text-slate-500 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-950/50 rounded-xl p-3 border border-slate-100 dark:border-slate-800/40 relative">
-                  <i class="fas fa-quote-left absolute -top-1.5 -left-1 text-[10px] text-slate-200 dark:text-slate-800"></i>
-                  <span class="block line-clamp-3 leading-relaxed">${escapeHtml(exam.notes)}</span>
+                   <i class="fas fa-quote-left absolute -top-1.5 -left-1 text-[10px] text-slate-200 dark:text-slate-800"></i>
+                   <span class="block line-clamp-3 leading-relaxed">${formatNotes(exam.notes)}</span>
                 </div>` : ''}
               
               <!-- Action Shortcuts Menu (Google search, Calendar export) -->
@@ -1275,6 +1293,116 @@
         return c;
       });
     }
+
+    function formatNotes(text) {
+      if (!text) return '';
+      let html = escapeHtml(text);
+      let lines = html.split('\n');
+      let formattedLines = lines.map(line => {
+        let trimmed = line.trim();
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ') || trimmed.startsWith('• ')) {
+          return `<li class="list-disc list-inside ml-1.5 my-0.5">${trimmed.substring(2)}</li>`;
+        }
+        let numMatch = trimmed.match(/^(\d+)\.\s+(.*)/);
+        if (numMatch) {
+          return `<li class="list-decimal list-inside ml-1.5 my-0.5">${numMatch[2]}</li>`;
+        }
+        return line;
+      });
+      html = formattedLines.join('\n');
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
+    window.toggleExamForm = function() {
+      const content = document.getElementById('examFormContent');
+      const icon = document.getElementById('examFormCollapseIcon');
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+      }
+    };
+
+    window.expandExamForm = function() {
+      const content = document.getElementById('examFormContent');
+      const icon = document.getElementById('examFormCollapseIcon');
+      content.classList.remove('hidden');
+      icon.classList.remove('fa-chevron-down');
+      icon.classList.add('fa-chevron-up');
+    };
+
+    window.collapseExamForm = function() {
+      const content = document.getElementById('examFormContent');
+      const icon = document.getElementById('examFormCollapseIcon');
+      content.classList.add('hidden');
+      icon.classList.remove('fa-chevron-up');
+      icon.classList.add('fa-chevron-down');
+    };
+
+    window.insertFormat = function(type) {
+      const textarea = document.getElementById('notes');
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      const selectedText = text.substring(start, end);
+      
+      let replacement = '';
+      if (type === 'bold') {
+        replacement = `**${selectedText || 'bold text'}**`;
+      } else if (type === 'italic') {
+        replacement = `*${selectedText || 'italic text'}*`;
+      } else if (type === 'bullet') {
+        replacement = selectedText ? selectedText.split('\n').map(line => line.startsWith('- ') ? line : `- ${line}`).join('\n') : '- ';
+      } else if (type === 'number') {
+        let counter = 1;
+        replacement = selectedText ? selectedText.split('\n').map(line => {
+          let cleaned = line.replace(/^\d+\.\s+/, '');
+          return `${counter++}. ${cleaned}`;
+        }).join('\n') : '1. ';
+      }
+      
+      textarea.value = text.substring(0, start) + replacement + text.substring(end);
+      textarea.focus();
+      textarea.setSelectionRange(start, start + replacement.length);
+    };
+
+    window.autoOrganizeNotes = function() {
+      const textarea = document.getElementById('notes');
+      let text = textarea.value.trim();
+      if (!text) {
+        showToast('Please type some notes first to organize.', 'warning');
+        return;
+      }
+      
+      let lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let resultLines = [];
+      
+      for (let line of lines) {
+        if (line.startsWith('-') || line.startsWith('*') || line.startsWith('•') || /^\d+\./.test(line)) {
+          resultLines.push(line);
+          continue;
+        }
+        
+        let sentences = line.split(/[.!?]\s+/).map(s => s.trim()).filter(s => s.length > 0);
+        for (let s of sentences) {
+          if (!s.endsWith('.') && !s.endsWith('!') && !s.endsWith('?')) {
+            s += '.';
+          }
+          resultLines.push(`- ${s}`);
+        }
+      }
+      
+      textarea.value = resultLines.join('\n');
+      textarea.focus();
+      showToast('Notes auto-organized into bullet points!', 'success');
+    };
 
     // ---------- Operations: Save / Edit / Delete ----------
     function saveExam() {
@@ -1353,6 +1481,8 @@
       document.getElementById('formTitleIcon').className = 'w-8 h-8 rounded-lg bg-green-500/10 text-green-600 dark:text-green-400 flex items-center justify-center text-base';
       document.getElementById('formTitleIcon').innerHTML = '<i class="fas fa-plus-circle"></i>';
       document.getElementById('cancelEditBtn').classList.add('hidden');
+      
+      collapseExamForm();
     }
     
     window.editExam = function(id) {
@@ -1385,6 +1515,7 @@
       document.getElementById('formTitleIcon').innerHTML = '<i class="fas fa-pen"></i>';
       document.getElementById('cancelEditBtn').classList.remove('hidden');
       
+      expandExamForm();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     
